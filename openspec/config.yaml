@@ -1,0 +1,29 @@
+project:
+  name: webCerro
+  displayName: Higienextremadura Modernization
+  sourceDomain: https://www.higienextremadura.com
+  type: modernization
+  evidence:
+    - docs/reference/
+    - assets/source-site/
+
+sdd:
+  strict_tdd: true
+  executionMode: auto
+  artifactStore: both
+  chainedPrStrategy: single-pr-default
+  reviewBudgetLines: 400
+
+phase:
+  current: sdd-init
+  allowedScope:
+    - initialize project context and phase links only
+    - no site implementation or functional changes
+
+testing:
+  enabled: false
+  runner: none
+  note: "No landing page implementation exists yet, so automated test runners are not yet configured."
+
+links:
+  skillRegistry: .atl/skill-registry.md

@@ -1,0 +1,8 @@
+# Local tooling and runtime state
+.atl/
+.pi/
+.pi-subagents/
+.codegraph/
+.pytest_cache/
+**/__pycache__/
+*.py[cod]
