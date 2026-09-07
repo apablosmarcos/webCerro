@@ -1,0 +1,52 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main, design/landing-threejs]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: original
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: design/landing-threejs
+          path: redesign
+          persist-credentials: false
+      - uses: actions/configure-pages@v5
+      - name: Package both landings
+        run: |
+          mkdir -p _site/3d
+          (cd original && cp --parents index.html styles.css assets/source-site/slides/slide1.jpg assets/source-site/categories/{textiles,dispensadores,carros}.jpg ../_site/)
+          (cd redesign && cp --parents index.html styles.css scripts/cleaning-scene.js assets/source-site/categories/{textiles,dispensadores,carros}.jpg ../_site/3d/)
+          test -f _site/index.html && test -f _site/3d/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
